@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+
+
+	<script type="text/javascript">
+
+		window.onload = function(){
+
+			var http = new XMLHttpRequest();
+			http.open("GET", "http://localhost:4001/items");
+			http.setRequestHeader("content-type", "application/json");
+			http.onreadystatechange = function(){
+				if(http.readyState ===4){
+					if(http.status === 200){
+						alert('Success');
+						console.log(http.response);
+						//string to object
+						var list = JSON.parse(http.response);
+						constructTable(list);
+					}
+			}
+		}
+			http.send();
+
+		}
+
+		function submitForm(){
+			var http = new XMLHttpRequest();
+			http.open("POST", "http://localhost:4001/items");
+			http.setRequestHeader("content-type", "application/json");
+			http.onreadystatechange = function(){
+				if(http.readyState ===4){
+					if(http.status === 200){
+						alert('Success');
+						console.log(http.response);
+						//string to object
+						var list = JSON.parse(http.response);
+						constructTable(list);
+					}
+				}
+			}
+			var obj = {};
+			obj.name = document.getElementById("mvieName").value;
+			obj.id = document.getElementById("mvieId").value;
+			obj.genre = document.getElementById("mvieGenre").value;
+
+			//object to string
+			var strJSON = JSON.stringify(obj);
+
+			http.send(strJSON);
+
+
+		}
+
+		function constructTable(response){
+			response = response.reverse();
+			var body = '';
+			for(obj of response){
+				var row = '<tr>'
+				row = row + '<td>' + obj.name +'</td>';
+				row = row + '<td>' + obj.id + '</td>';
+				row = row + '<td>' + obj.genre + '</td>';
+				row = row + '</tr>'
+
+				body = body + row;
+			}
+			
+
+			document.getElementById("movieList").children[1].innerHTML = body;
+		}
+
+		
+	</script>
+	<style type="text/css">
+		
+		table, th, td {
+			border: 1px solid black;
+			border-collapse: collapse;
+		}
+		table {
+			width: 100%;
+		}
+
+	</style>
+
+	</head>
+	
+
+	<body>
+		<div class="container">
+			<h1> Add a Movie </h1>
+
+			<form>
+				Movie Name : <input type="text" name="name" id="mvieName">
+				id : <input type="text" name="id" id="mvieId">
+				genre : <input type="text" name="genre" id="mvieGenre">
+
+				<button type="button" onclick="submitForm()"> Create a Movie</button>
+  				
+			</form>
+
+			<h1> Movie List </h1>
+
+			<table id="movieList">
+			<thead>
+				<tr>
+					<th>Movie Name</th>
+					<th>Id</th>
+					<th>Genre</th>
+				</tr>
+			</thead>
+
+			<tbody>
+
+			</tbody>
+				
+			</table>
+		</div>
+
+	</body>
+</html>
